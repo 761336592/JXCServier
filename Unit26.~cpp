@@ -1,0 +1,73 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#include   <inifiles.hpp>
+#pragma hdrstop
+
+#include "Unit26.h"
+#include "Unit6.h"
+#include "Unit20.h"
+#include "Unit1.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm26 *Form26;
+//---------------------------------------------------------------------------
+__fastcall TForm26::TForm26(TComponent* Owner)
+        : TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm26::Button1Click(TObject *Sender)
+{
+
+     CKprint->QRLabel15->Caption=Edit1->Text.Trim();
+     if(Edit2->Text.Trim().Length()==0)CKprint->QRLabel16->Caption="";
+     else CKprint->QRLabel16->Caption="备    注："+Edit2->Text.Trim();
+     CKprint->QRLabel7->Caption=Form1->infshow2.Trim();
+
+
+
+     Double all=0;
+       //计算总金额
+     for(int i=0;i<Form1->CK_ADOQuery->RecordCount;i++)
+     {
+            all=all+Form1->CK_ADOQuery->FieldByName("出库数量")->AsFloat*Form1->CK_ADOQuery->FieldByName("售价")->AsFloat;
+            Form1->CK_ADOQuery->Next();
+     }
+     CKprint->QRLabel13->Caption=String(all);
+     TIniFile   *ini=new   TIniFile(ExtractFileDir(Application->ExeName)+"\\configinfo.ini");
+     CKprint->QRLabel5->Caption=ini->ReadString("Sys","CK3","广州润山信息科技有限公司");
+     delete  ini;
+     CKprint->QRLabel3->Caption=Now().FormatString("yyyy-mm-dd hh:nn:ss");
+     this->Close();
+     CKprint->QuickRep1->Preview();
+
+
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm26::FormShow(TObject *Sender)
+{
+    Edit1->Text="";
+    Edit2->Text="";
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm26::Edit1KeyDown(TObject *Sender, WORD &Key,
+      TShiftState Shift)
+{
+    if(Key==13)
+    {
+       Edit2->SetFocus();
+    }
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm26::Edit2KeyDown(TObject *Sender, WORD &Key,
+      TShiftState Shift)
+{
+    if(Key==13)
+    {
+       Button1Click(Sender);
+    }
+}
+//---------------------------------------------------------------------------

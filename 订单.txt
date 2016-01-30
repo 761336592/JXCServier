@@ -1,0 +1,5 @@
+条码	单据	数量
+1111	asdsa	3
+2222	sdfsd	3
+3333	sdfsd	4
+1111	sdfsd	2
